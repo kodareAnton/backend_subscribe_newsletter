@@ -10,10 +10,12 @@ router.get('/', function(req, res, next) {
   req.app.locals.db.collection('users').find().toArray()
   .then(results =>{
     console.log(results);
-    let printUsers = '<div><h2>Våra users</h2>'
+    let printUsers = '<div><h1>Våra users</h1>'
 
     for (user in results){
-      printUsers += '<h1>' + results[user].username + '</h1>' 
+      printUsers += '<h2>' + results[user].username + '</h2>' 
+      + '<p>' + 'Prenumerationsstatus: ' +results[user].subscribe +  '</p>'
+      
     }
     printUsers += "</div>"
     res.send(printUsers);
@@ -54,10 +56,10 @@ router.put('/:id', function(req,res){
   console.log(req.params.id)
   console.log(req.body.subscribe);
   try {
-    req.app.locals.db.collection('users').findOneAndUpdate({_id: Object(req.params.id)}, {$set: {subscribe: req.body.subscribe}})
+    req.app.locals.db.collection('users').findOneAndUpdate({username: req.body.username}, {$set: {subscribe: req.body.subscribe}})
     .then(result =>{
       res.status(200).send(JSON.stringify('200'));
-      console.log('uppdaterar användare');
+      console.log('uppdaterar användare', result);
     })
   } catch (err){
     console.log(err);
